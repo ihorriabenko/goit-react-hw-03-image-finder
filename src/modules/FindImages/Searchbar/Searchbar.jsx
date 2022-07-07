@@ -16,7 +16,7 @@ class Searchbar extends Component {
   };
 
   handleChange = e => {
-    this.setState({ value: e.currentTarget.value.toLowerCase() });
+    this.setState({ value: e.currentTarget.value });
   };
 
   render() {

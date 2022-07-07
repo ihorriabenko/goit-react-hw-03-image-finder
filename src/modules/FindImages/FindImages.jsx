@@ -88,13 +88,9 @@ class FindImages extends Component {
     return (
       <div className="FindImage">
         <Searchbar onSubmit={handleFormSubmit} />
-        <ImageGallery>
-          {items.length > 0 && (
-            <ImageGalleryItem onClick={showModal} items={items} />
-          )}
+        {items.length > 0 &&<ImageGallery onClick={showModal} items={items} />}
         {error && <p>Не удалось загрузить посты</p>}
         {loading && <Loader/>}
-        </ImageGallery>
         {modalOpen && (
           <Modal onClose={closeModal}>
             <img src={modalContent.src} alt="img"></img>
