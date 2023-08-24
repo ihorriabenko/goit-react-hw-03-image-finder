@@ -3,7 +3,7 @@ import ImageGallery from './ImageGallery';
 import ImageGalleryItem from './ImageGalleryItem';
 import { getPosts } from '../../shared/components/services/Api';
 import Modal from '../../shared/components/Modal';
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 import { Component } from 'react';
 import Button from './Button';
@@ -17,6 +17,7 @@ class FindImages extends Component {
     page: 1,
     value: '',
     modalOpen: false,
+    showBtn: true,
     modalContent: {
       src: '',
     },
@@ -39,8 +40,14 @@ class FindImages extends Component {
     try {
       const data = await getPosts(value, page);
       this.setState(({ items }) => {
+        console.log(this.state.page);
+        console.log(Math.ceil(data.totalHits / 12));
+        console.log(this.state.page === Math.ceil(data.totalHits / 12));
+        console.log(this.state.showBtn);
         return {
           items: [...items, ...data.hits],
+          showBtn:
+            this.state.page === Math.ceil(data.totalHits / 12) ? false : true,
         };
       });
     } catch (error) {
@@ -63,7 +70,7 @@ class FindImages extends Component {
   };
 
   handleFormSubmit = value => {
-    this.setState({ value, items: [] });
+    this.setState({ value, items: [], page: 1 });
   };
 
   showModal = modalContent => {
@@ -78,8 +85,8 @@ class FindImages extends Component {
   closeModal = () => {
     this.setState({
       modalOpen: false,
-    })
-  }
+    });
+  };
 
   render() {
     const { items, loading, error, modalOpen, modalContent } = this.state;
@@ -88,15 +95,15 @@ class FindImages extends Component {
     return (
       <div className="FindImage">
         <Searchbar onSubmit={handleFormSubmit} />
-        {items.length > 0 &&<ImageGallery onClick={showModal} items={items} />}
+        {items.length > 0 && <ImageGallery onClick={showModal} items={items} />}
         {error && <p>Не удалось загрузить посты</p>}
-        {loading && <Loader/>}
+        {loading && <Loader />}
         {modalOpen && (
           <Modal onClose={closeModal}>
             <img src={modalContent.src} alt="img"></img>
           </Modal>
         )}
-        {!loading && items.length >= 12 && <Button onClick={handleLoadMore} />}
+        {!loading && items.length >= 12 && this.state.showBtn && <Button onClick={handleLoadMore} />}
       </div>
     );
   }
