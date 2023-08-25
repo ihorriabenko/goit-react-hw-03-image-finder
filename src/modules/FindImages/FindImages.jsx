@@ -1,6 +1,5 @@
 import Searchbar from './Searchbar';
 import ImageGallery from './ImageGallery';
-import ImageGalleryItem from './ImageGalleryItem';
 import { getPosts } from '../../shared/components/services/Api';
 import Modal from '../../shared/components/Modal';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
@@ -40,14 +39,10 @@ class FindImages extends Component {
     try {
       const data = await getPosts(value, page);
       this.setState(({ items }) => {
-        console.log(this.state.page);
-        console.log(Math.ceil(data.totalHits / 12));
-        console.log(this.state.page === Math.ceil(data.totalHits / 12));
-        console.log(this.state.showBtn);
         return {
           items: [...items, ...data.hits],
           showBtn:
-            this.state.page === Math.ceil(data.totalHits / 12) ? false : true,
+            this.state.page < Math.ceil(data.totalHits / 12),
         };
       });
     } catch (error) {
